@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 
 import logging
-from consts import LOGIN_URL, FOLLOWING_URL, FOLLOWERS_URL, MYUSERNAME, PASSWORD
+from consts import LOGIN_URL, FOLLOWERS_URL, MYUSERNAME, PASSWORD, PROFILE_URL
 from bs4 import BeautifulSoup
 
 
@@ -58,20 +58,32 @@ with sync_playwright() as p:
     page.click('button._acan._acap._acas._aj1-._ap30')
     page.wait_for_timeout(10000)
 
+    #Открываем профиль
+    page.goto(PROFILE_URL)
+    page.wait_for_timeout(10000)
+
     # Переходим на страницу подписок
-    page.goto(FOLLOWING_URL, wait_until="load")
-    page.wait_for_selector('div._aano')
-    page.wait_for_selector('span._ap3a._aaco._aacw._aacx._aad7._aade')
+    page.click('a[href="/fatfry666/following/"]')
+    page.wait_for_timeout(10000)
+    page.wait_for_selector('div._ac76')
+    page.wait_for_selector('div.xyi19xy.x1ccrb07.xtf3nb5.x1pc53ja.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6')
 
     # Начинаем скроллить подписки
-    SCROLL_CONTAINER_SELECTOR = 'div._aano'
-    for i in range(SCROLL_FOLLOWINGS):
+    SCROLL_CONTAINER_SELECTOR = 'div.xyi19xy.x1ccrb07.xtf3nb5.x1pc53ja.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6'
+    # page.evaluate("SCROLLABLE = true; addEventListener(\"scrollend\", (event) => {SCROLLABLE = false});")
+
+    page.on("scrollend", lambda: SCROLLABLE = False)
+    i = 0
+    while SCROLLABLE:
         page.evaluate(f"document.querySelector('{SCROLL_CONTAINER_SELECTOR}').scrollTo({i * 1000}, {i * 2000});")
         page.wait_for_timeout(2000)
+        i += 1
+    logging.info('Конец скрола подписок')
     # Берем содержимое страницы подписок и парсим их имена
     current_page_content = page.content()
     our_followings = find_elements_with_classes(current_page_content)
     write_data_to_file(our_followings, 'followings.txt')
+    page.wait_for_timeout(2000)
 
     # Начинаем скроллить подписчиков
     page.goto(FOLLOWERS_URL, wait_until="load")
@@ -85,24 +97,3 @@ with sync_playwright() as p:
     current_page_content = page.content()
     our_followers = find_elements_with_classes(current_page_content)
     write_data_to_file(our_followers, 'followers.txt')
-
-
-    res = set(our_followings) - set(our_followers)
-    print(f'following =  {len(our_following)}\nfollowers = {len(our_followers)}\ndiff = {len(res)}')
-    print(res)
-
-
-    write_data_to_file(our_followers, 'followers.txt')
-    write_data_to_file(our_following, 'following.txt')
-    write_data_to_file(diff, 'unfollowers')
-
-
-    def get_list_from_file(filename: str):
-        with open('file.txt', 'r') as file:
-            usernames = [line.strip() for line in file]
-            return usernames
-
-
-    usernames_from_file = get_list_srom_file('unfollowers.')
-    print(set(usernames_from_file))
-
