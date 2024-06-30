@@ -2,13 +2,13 @@ import random
 
 BASE_URL = 'https://www.instagram.com/'
 
+MYUSERNAME = 'fatfry666'
+PASSWORD = "taim666"
+
 LOGIN_URL = BASE_URL + 'accounts/login/'
-PROFILE_URL = BASE_URL + 'ne.govnar/'
+PROFILE_URL = BASE_URL + f'{MYUSERNAME}/'
 FOLLOWING_URL = PROFILE_URL + 'following/'
 FOLLOWERS_URL = PROFILE_URL + 'followers/'
-
-MYUSERNAME = "****r"
-PASSWORD = "****"
 
 LOOP = 2
 AMOUNT_OF_UNFOLLOW = 30

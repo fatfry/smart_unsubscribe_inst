@@ -1,5 +1,4 @@
 from playwright.sync_api import sync_playwright
-
 import logging
 from consts import LOGIN_URL, FOLLOWERS_URL, MYUSERNAME, PASSWORD, PROFILE_URL
 from bs4 import BeautifulSoup
@@ -32,6 +31,7 @@ def find_elements_with_classes(html_content):
     # Извлекаем текстовое содержимое найденных элементов
     texts = [element.get_text() for element in elements]
 
+
     return texts
 
 
@@ -61,39 +61,38 @@ with sync_playwright() as p:
     #Открываем профиль
     page.goto(PROFILE_URL)
     page.wait_for_timeout(10000)
-
-    # Переходим на страницу подписок
-    page.click('a[href="/fatfry666/following/"]')
+    page.goto('https://www.instagram.com/llizpls/')
+    # Переходим на страницу подписчиков
+    page.click('a[href="/llizpls/followers/"]')
     page.wait_for_timeout(10000)
     page.wait_for_selector('div._ac76')
     page.wait_for_selector('div.xyi19xy.x1ccrb07.xtf3nb5.x1pc53ja.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6')
+    # Начинаем скроллить подписчиков
+    SCROLL_CONTAINER_SELECTOR = 'div.xyi19xy.x1ccrb07.xtf3nb5.x1pc53ja.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6'
+    for i in range(200):
+        page.evaluate(f"document.querySelector('{SCROLL_CONTAINER_SELECTOR}').scrollTo({i * 1000}, {i * 2000});")
+        page.wait_for_timeout(2000)  # Берем содержимое страницы подписчики и парсим их имена
+        current_page_content = page.content()
+        our_followers = find_elements_with_classes(current_page_content)
+        write_data_to_file(our_followers, 'followers.txt')
+        page.wait_for_timeout(2000)
 
+    page.goto('https://www.instagram.com/llizpls/')
+    # Переходим на страницу подписки
+    page.click('a[href="/llizpls/following/"]')
+    page.wait_for_timeout(10000)
+    page.wait_for_selector('div._ac76')
+    page.wait_for_selector('div.xyi19xy.x1ccrb07.xtf3nb5.x1pc53ja.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6')
     # Начинаем скроллить подписки
     SCROLL_CONTAINER_SELECTOR = 'div.xyi19xy.x1ccrb07.xtf3nb5.x1pc53ja.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6'
-    # page.evaluate("SCROLLABLE = true; addEventListener(\"scrollend\", (event) => {SCROLLABLE = false});")
-
-    page.on("scrollend", lambda: SCROLLABLE = False)
-    i = 0
-    while SCROLLABLE:
+    for i in range(50):
         page.evaluate(f"document.querySelector('{SCROLL_CONTAINER_SELECTOR}').scrollTo({i * 1000}, {i * 2000});")
+        page.wait_for_timeout(2000)  # Берем содержимое страницы подписчики и парсим их имена
+        current_page_content = page.content()
+        our_following = find_elements_with_classes(current_page_content)
+        write_data_to_file(our_following, 'following.txt')
         page.wait_for_timeout(2000)
-        i += 1
-    logging.info('Конец скрола подписок')
-    # Берем содержимое страницы подписок и парсим их имена
-    current_page_content = page.content()
-    our_followings = find_elements_with_classes(current_page_content)
-    write_data_to_file(our_followings, 'followings.txt')
-    page.wait_for_timeout(2000)
 
-    # Начинаем скроллить подписчиков
-    page.goto(FOLLOWERS_URL, wait_until="load")
-    page.wait_for_selector('div._aano')
-    SCROLL_CONTAINER_SELECTOR = 'div._aano'
-    page.wait_for_timeout(10000)
-    for i in range(SCROLL_FOLLOWERS):
-        page.evaluate(f"document.querySelector('{SCROLL_CONTAINER_SELECTOR}').scrollTo({i * 1000}, {i * 2000});")
-        page.wait_for_timeout(2000)
-    # Берем содержимое страницы подписчиков и парсим их имена
-    current_page_content = page.content()
-    our_followers = find_elements_with_classes(current_page_content)
-    write_data_to_file(our_followers, 'followers.txt')
+res = set(our_following) - set(our_followers)
+write_data_to_file(list(res), 'followings.txt')
+

@@ -1,14 +1,15 @@
 [tool.poetry]
-name = "inst-bot"
+name = "smart_unsubscribe_inst"
 version = "0.1.0"
 description = ""
 authors = ["Raphael <raphael.mukha@gmail.com>"]
-readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10.12"
 selenium = "^4.17.2"
 load-dotenv = "^0.1.0"
+playwright = "^1.44.0"
+flake8 = "^7.1.0"
 
 
 [build-system]
