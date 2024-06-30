@@ -2,7 +2,7 @@
 name = "smart_unsubscribe_inst"
 version = "0.1.0"
 description = ""
-authors = ["Raphael <raphael.mukha@gmail.com>"]
+authors = ["fatfy"]
 
 [tool.poetry.dependencies]
 python = "^3.10.12"
