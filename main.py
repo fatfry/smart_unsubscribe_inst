@@ -59,11 +59,12 @@ with sync_playwright() as p:
     page.wait_for_timeout(10000)
 
     #Открываем профиль
+    #Link-bio - профиль аккаунта по поиску
     page.goto(PROFILE_URL)
     page.wait_for_timeout(10000)
-    page.goto('https://www.instagram.com/llizpls/')
+    page.goto('https://www.instagram.com/link_bio/')
     # Переходим на страницу подписчиков
-    page.click('a[href="/llizpls/followers/"]')
+    page.click('a[href="/link_bio/followers/"]')
     page.wait_for_timeout(10000)
     page.wait_for_selector('div._ac76')
     page.wait_for_selector('div.xyi19xy.x1ccrb07.xtf3nb5.x1pc53ja.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6')
@@ -79,7 +80,7 @@ with sync_playwright() as p:
 
     page.goto('https://www.instagram.com/llizpls/')
     # Переходим на страницу подписки
-    page.click('a[href="/llizpls/following/"]')
+    page.click('a[href="/link_bio/following/"]')
     page.wait_for_timeout(10000)
     page.wait_for_selector('div._ac76')
     page.wait_for_selector('div.xyi19xy.x1ccrb07.xtf3nb5.x1pc53ja.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6')

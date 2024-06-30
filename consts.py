@@ -2,8 +2,8 @@ import random
 
 BASE_URL = 'https://www.instagram.com/'
 
-MYUSERNAME = 'fatfry666'
-PASSWORD = "taim666"
+MYUSERNAME = 'login'
+PASSWORD = "password"
 
 LOGIN_URL = BASE_URL + 'accounts/login/'
 PROFILE_URL = BASE_URL + f'{MYUSERNAME}/'
